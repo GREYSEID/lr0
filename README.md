@@ -8,37 +8,22 @@ lr(0)分析法的实现（应该）
 测试的文法：
 
 S->P
-
 P->m,r
-
 P->m,i
-
 P->r,r
-
 P->r,i
-
 P->r,m
 
 S->E
-
 E->BB
-
 B->aB
-
 B->b
 
 (有冲突)
-
 S->E
-
 E->E+T
-
 E->T
-
 T->T*F
-
 T->F
-
 F->(E)
-
 F->i
