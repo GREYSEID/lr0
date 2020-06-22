@@ -1,0 +1,33 @@
+4 m i r ,
+2 S P
+6
+S P
+P m,r
+P m,i
+P r,r
+P r,i
+P r,m
+
+2 a b
+3 S E B
+4
+S E
+E BB
+B aB
+B b
+
+5 + * ( ) i
+4 S E T F
+7
+S E
+E E+T
+E T
+T T*F
+T F
+F (E)
+F i
+
+
+
+
+
