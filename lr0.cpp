@@ -670,7 +670,7 @@ void init()
 	cin >> b;
 	b = b + 1;
 	string input;
-	cout << "请输入要分析的输入串(#为结尾）:";
+	cout << "请输入要分析的输入串(#为结尾，每输入一个字符，空一次格）:";
 	for(int h=0;h<b;h++)
 	{
 		cin>>strcode[h];
