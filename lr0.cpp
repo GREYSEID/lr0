@@ -7,35 +7,35 @@ using namespace std;
 #define wherenum 100
 string Action[50][50];
 string Goto[50][50];
-map<int, pair<string, string>>chanshengshi;//²úÉúÊ½,×ó²¿ÓëÓÒ²¿
+map<int, pair<string, string>>chanshengshi;//äº§ç”Ÿå¼,å·¦éƒ¨ä¸å³éƒ¨
 map<pair<string, string>, int>wherechanshengshi;
-pair<pair<string,string>, int>xiangmuchanshengshi;//ÏîÄ¿µÄ²úÉúÊ½ÒÔ¼°µãËùÔÚµÄÎ»ÖÃ
-map<int, pair<pair<string,string>, int>>xiangmu;//ÏîÄ¿ÒÔ¼°¶ÔÓ¦µÄ±àºÅ
-int num_chanshengshi, num_vt, num_vn, num_xiangmu,num_closure;//²úÉúÊ½ÖÕ½á·û·ÇÖÕ½á·ûÏîÄ¿±Õ°ü¸öÊı
+pair<pair<string,string>, int>xiangmuchanshengshi;//é¡¹ç›®çš„äº§ç”Ÿå¼ä»¥åŠç‚¹æ‰€åœ¨çš„ä½ç½®
+map<int, pair<pair<string,string>, int>>xiangmu;//é¡¹ç›®ä»¥åŠå¯¹åº”çš„ç¼–å·
+int num_chanshengshi, num_vt, num_vn, num_xiangmu,num_closure;//äº§ç”Ÿå¼ç»ˆç»“ç¬¦éç»ˆç»“ç¬¦é¡¹ç›®é—­åŒ…ä¸ªæ•°
 map<string, int>vt;
 map<string, int>vn;
 map<int, string>wherevt;
 map<int, string>wherevn;
  struct closure{
-	int num=NULL;//±Õ°üµÄ±àºÅ
-	string first;//µÚÒ»ĞĞµÄÏîÄ¿
-	int all[50];//È«²¿ÏîÄ¿,ÏîÄ¿¶ÔÓ¦µÄ±àºÅ
-	int count = -1;//ÏîÄ¿¸öÊı
-	int spot=-1;//µÚÒ»¸öÏîÄ¿µÄ"."ËùÔÚÎ»ÖÃ
-	int father[50];//¸¸´ú
+	int num=NULL;//é—­åŒ…çš„ç¼–å·
+	string first;//ç¬¬ä¸€è¡Œçš„é¡¹ç›®
+	int all[50];//å…¨éƒ¨é¡¹ç›®,é¡¹ç›®å¯¹åº”çš„ç¼–å·
+	int count = -1;//é¡¹ç›®ä¸ªæ•°
+	int spot=-1;//ç¬¬ä¸€ä¸ªé¡¹ç›®çš„"."æ‰€åœ¨ä½ç½®
+	int father[50];//çˆ¶ä»£
 	string fatherpoint[10];
 	string nextpoint[10];
-	int fathercount = -1;//¸¸´úÌø×ªµ½µ±Ç°×´Ì¬µÄ¸öÊı
-	string x[50];//¾­Ê²Ã´Ìø×ª
-	int next[50];//Ã¿Ò»¸öÏîÄ¿£¬µãºóÒÆÌø×ªµ½µÄ±Õ°üÎ»ÖÃ
-	int scount = -1;//ÒÑ¾­Á¬½Óµ½×Ó´úµÄ¸öÊı
+	int fathercount = -1;//çˆ¶ä»£è·³è½¬åˆ°å½“å‰çŠ¶æ€çš„ä¸ªæ•°
+	string x[50];//ç»ä»€ä¹ˆè·³è½¬
+	int next[50];//æ¯ä¸€ä¸ªé¡¹ç›®ï¼Œç‚¹åç§»è·³è½¬åˆ°çš„é—­åŒ…ä½ç½®
+	int scount = -1;//å·²ç»è¿æ¥åˆ°å­ä»£çš„ä¸ªæ•°
 }theclosure[20];
 void setchanshengshi()
 {
 	fstream f;
 	f.open("test1.txt",ios::in);
 	f >> num_vt;
-	cout << "ÖÕ½á·û¸öÊı" << num_vt << endl<<"ÖÕ½á·û:";
+	cout << "ç»ˆç»“ç¬¦ä¸ªæ•°" << num_vt << endl<<"ç»ˆç»“ç¬¦:";
 	for (int i = 0; i < num_vt; i++)
 	{
 		string str;
@@ -48,7 +48,7 @@ void setchanshengshi()
 	wherevt.insert(pair<int, string>(num_vt, "#"));
 	num_vt++;
 	f >> num_vn;
-	cout << "·ÇÖÕ½á·û¸öÊı" << num_vn << endl << "·ÇÖÕ½á·û:";
+	cout << "éç»ˆç»“ç¬¦ä¸ªæ•°" << num_vn << endl << "éç»ˆç»“ç¬¦:";
 	for (int i = 0; i < num_vn; i++)
 	{
 		string str;
@@ -57,10 +57,10 @@ void setchanshengshi()
 		wherevn.insert(pair<int, string>(i, str));
 		cout << str;
 	}
-	cout << "²úÉúÊ½¸öÊı";
+	cout << "äº§ç”Ÿå¼ä¸ªæ•°";
 	f >> num_chanshengshi;
 	cout << num_chanshengshi;
-	cout << "ÊäÈëÍØ¹ãºóµÄÎÄ·¨£¬SÎªÎÄ·¨¿ªÊ¼·û" << endl;
+	cout << "è¾“å…¥æ‹“å¹¿åçš„æ–‡æ³•ï¼ŒSä¸ºæ–‡æ³•å¼€å§‹ç¬¦" << endl;
 	for (int i = 0; i < num_chanshengshi; i++)
 	{
 		string l, r;
@@ -83,11 +83,11 @@ void judge()
 			string allright = chanshengshi[x].second;
 			if (x!=i)
 			{
-				if (right == part)cout << chansheng.first << "->" << chansheng.second <<"\t"<<chanshengshi[x].first<<"->"<<chanshengshi[x].second<< "ÒÆÈë-¹éÔ¼³åÍ»" << endl;
+				if (right == part)cout << chansheng.first << "->" << chansheng.second <<"\t"<<chanshengshi[x].first<<"->"<<chanshengshi[x].second<< "ç§»å…¥-å½’çº¦å†²çª" << endl;
 			}
 			if (x!=i)
 			{
-				if(chansheng.second==chanshengshi[x].second)cout << chansheng.first << "->" << chansheng.second << "\t" << chanshengshi[x].first << "->" << chanshengshi[x].second << "¹éÔ¼-¹éÔ¼³åÍ»" << endl;
+				if(chansheng.second==chanshengshi[x].second)cout << chansheng.first << "->" << chansheng.second << "\t" << chanshengshi[x].first << "->" << chanshengshi[x].second << "å½’çº¦-å½’çº¦å†²çª" << endl;
 			}
 			if (x!=i)
 			{
@@ -95,7 +95,7 @@ void judge()
 				if (chanshengshi[x].second.length() > right.length()) {
 					apart = chanshengshi[x].second.substr(chanshengshi[x].second.length() - right.length(), chanshengshi[x].second.length());
 				}
-				if(apart==right)cout << chansheng.first << "->" << chansheng.second << "\t" << chanshengshi[x].first << "->" << chanshengshi[x].second << "¹éÔ¼-¹éÔ¼³åÍ»" << endl;
+				if(apart==right)cout << chansheng.first << "->" << chansheng.second << "\t" << chanshengshi[x].first << "->" << chanshengshi[x].second << "å½’çº¦-å½’çº¦å†²çª" << endl;
 			}
 		}
 	}
@@ -116,10 +116,10 @@ void createproject()
 	{
 		string str=xiangmu[i].first.second;
 		string str1 = str.insert(xiangmu[i].second, ".");
-		cout << "ÏîÄ¿"<<xiangmu[i].first.first << "->" << str1<<"\t.ÔÚÓÒ²¿µÚ"<<xiangmu[i].second<<"Î»"<<"\tÓÒ²¿³¤¶ÈÎª"<< xiangmu[i].first.second.length()<<endl;
+		cout << "é¡¹ç›®"<<xiangmu[i].first.first << "->" << str1<<"\t.åœ¨å³éƒ¨ç¬¬"<<xiangmu[i].second<<"ä½"<<"\tå³éƒ¨é•¿åº¦ä¸º"<< xiangmu[i].first.second.length()<<endl;
 	}
 }
-int searchsame(int x)//ÏîÄ¿µÄ±àºÅ
+int searchsame(int x)//é¡¹ç›®çš„ç¼–å·
 {
 	//for (int i = 0; i < num_xiangmu; i++)
 	//{
@@ -151,7 +151,7 @@ int searchsame(int x)//ÏîÄ¿µÄ±àºÅ
 	//}
 	return -1;
 }
-int search(int x)//ÏîÄ¿Î»ÖÃ£¬µ«ÏîÄ¿ÔÚ¶à¸ö¼¯ºÏÖĞ¶¼¿ÉÄÜÓĞ£¬Ö»ÄÜ¿´´æ²»´æÔÚ
+int search(int x)//é¡¹ç›®ä½ç½®ï¼Œä½†é¡¹ç›®åœ¨å¤šä¸ªé›†åˆä¸­éƒ½å¯èƒ½æœ‰ï¼Œåªèƒ½çœ‹å­˜ä¸å­˜åœ¨
 {
 	if (num_closure < 0)return -1;
 	for (int i = 0; i <= num_closure; i++)
@@ -160,11 +160,11 @@ int search(int x)//ÏîÄ¿Î»ÖÃ£¬µ«ÏîÄ¿ÔÚ¶à¸ö¼¯ºÏÖĞ¶¼¿ÉÄÜÓĞ£¬Ö»ÄÜ¿´´æ²»´æÔÚ
 		{
 			if (x == theclosure[i].all[a])return i;
 		}*/
-		if (x ==theclosure[i].all[0])return i;//¶¼ÊÇÕÒµÚÒ»¸ö£¬ÒòÎªµÚÒ»¸öÊÇ»ñµÃÒ»¸ö×Ö·ûÍÆµ¼¹ıÀ´µÄ£¬ÆäËûµÄÊÇÓÉ¿Õ×ÖÍÆµ¼µÄ
+		if (x ==theclosure[i].all[0])return i;//éƒ½æ˜¯æ‰¾ç¬¬ä¸€ä¸ªï¼Œå› ä¸ºç¬¬ä¸€ä¸ªæ˜¯è·å¾—ä¸€ä¸ªå­—ç¬¦æ¨å¯¼è¿‡æ¥çš„ï¼Œå…¶ä»–çš„æ˜¯ç”±ç©ºå­—æ¨å¯¼çš„
 	}
 	return -1;
 }
-int searchexist(int x)//ÊÇ·ñ´æÔÚ
+int searchexist(int x)//æ˜¯å¦å­˜åœ¨
 {
 	if (num_closure < 0)return -1;
 	for (int i = 0; i <= num_closure; i++)
@@ -173,7 +173,7 @@ int searchexist(int x)//ÊÇ·ñ´æÔÚ
 		{
 			if (x == theclosure[i].all[a])return i;
 		}
-		//if (x == theclosure[i].all[0])return i;//¶¼ÊÇÕÒµÚÒ»¸ö£¬ÒòÎªµÚÒ»¸öÊÇ»ñµÃÒ»¸ö×Ö·ûÍÆµ¼¹ıÀ´µÄ£¬ÆäËûµÄÊÇÓÉ¿Õ×ÖÍÆµ¼µÄ
+		//if (x == theclosure[i].all[0])return i;//éƒ½æ˜¯æ‰¾ç¬¬ä¸€ä¸ªï¼Œå› ä¸ºç¬¬ä¸€ä¸ªæ˜¯è·å¾—ä¸€ä¸ªå­—ç¬¦æ¨å¯¼è¿‡æ¥çš„ï¼Œå…¶ä»–çš„æ˜¯ç”±ç©ºå­—æ¨å¯¼çš„
 	}
 	return -1;
 }
@@ -184,7 +184,7 @@ void dfs(int closurenum, string s)
 		if (xiangmu[i].second == 0 && xiangmu[i].first.first == s)
 		{
 			int flag = 1;
-			for (int z = 0; z <= theclosure[closurenum].count; z++)//ÓëclosureÖĞµÄ±È½Ï£¬·ÀÖ¹ÖØ¸´
+			for (int z = 0; z <= theclosure[closurenum].count; z++)//ä¸closureä¸­çš„æ¯”è¾ƒï¼Œé˜²æ­¢é‡å¤
 			{
 				if (theclosure[closurenum].all[z] == i)flag = 0;
 			}
@@ -209,14 +209,14 @@ int searchson()
 {
 	for (int i = 0; i <= num_closure; i++)
 	{
-		if (theclosure[i].first.length() == theclosure[i].spot) { continue; }//Óöµ½¹éÔ¼ÏîÄ¿Ìø¹ı
-		if (theclosure[i].count != theclosure[i].scount)return 1;//Èç¹ûÈÔ´æÔÚ×´Ì¬ÖĞÏîÄ¿ÓëÏÂÒ»¸ö×´Ì¬²»¶ÔÓ¦µÄÇé¿ö
+		if (theclosure[i].first.length() == theclosure[i].spot) { continue; }//é‡åˆ°å½’çº¦é¡¹ç›®è·³è¿‡
+		if (theclosure[i].count != theclosure[i].scount)return 1;//å¦‚æœä»å­˜åœ¨çŠ¶æ€ä¸­é¡¹ç›®ä¸ä¸‹ä¸€ä¸ªçŠ¶æ€ä¸å¯¹åº”çš„æƒ…å†µ
 	}
 	return 0;
 }
-int searchsameth(int x,int now)//ÓÃµãÒÑ¾­ºóÒÆµÄÏîÄ¿½øĞĞËÑÑ°
+int searchsameth(int x,int now)//ç”¨ç‚¹å·²ç»åç§»çš„é¡¹ç›®è¿›è¡Œæœå¯»
 {
-	if (search(x) == -1)//ÕÒ²»µ½
+	if (search(x) == -1)//æ‰¾ä¸åˆ°
 	{
 		/*pair<string,string>*/
 		pair<pair<string, string>, int>str = xiangmu[x];
@@ -227,15 +227,15 @@ int searchsameth(int x,int now)//ÓÃµãÒÑ¾­ºóÒÆµÄÏîÄ¿½øĞĞËÑÑ°
 			if (str == xiangmu[i])z = i;
 		}
 		if (z == -1)return -1;*/
-		for (int i = 0; i <= num_closure; i++)//Ñ°ÕÒclosure
+		for (int i = 0; i <= num_closure; i++)//å¯»æ‰¾closure
 		{
-			for (int z = 0; z <= theclosure[i].count; z++)//±éÀúclosureÀïµÄÏîÄ¿
+			for (int z = 0; z <= theclosure[i].count; z++)//éå†closureé‡Œçš„é¡¹ç›®
 			{
-				if (theclosure[i].all[z] != x)//²»´æÔÚ¸ÃÏîÄ¿
+				if (theclosure[i].all[z] != x)//ä¸å­˜åœ¨è¯¥é¡¹ç›®
 				{
-					if (xiangmu[theclosure[i].all[z]].first.first == xiangmu[x].first.first)//×ó²¿ÏàÍ¬
+					if (xiangmu[theclosure[i].all[z]].first.first == xiangmu[x].first.first)//å·¦éƒ¨ç›¸åŒ
 					{
-						if (xiangmu[theclosure[i].all[z]].second == xiangmu[x].second)//µãµÄÎ»ÖÃÏàÍ¬
+						if (xiangmu[theclosure[i].all[z]].second == xiangmu[x].second)//ç‚¹çš„ä½ç½®ç›¸åŒ
 						{
 							string s = xiangmu[theclosure[i].all[z]].first.second;
 							string st = xiangmu[x].first.second;
@@ -246,16 +246,16 @@ int searchsameth(int x,int now)//ÓÃµãÒÑ¾­ºóÒÆµÄÏîÄ¿½øĞĞËÑÑ°
 							string n;
 							string ne;
 							//int b = -1;
-							for (int h = 0; h < xiangmu[x].second; h++)//»ñÈ¡Ç°×º
+							for (int h = 0; h < xiangmu[x].second; h++)//è·å–å‰ç¼€
 							{
 								n.push_back(ch[h]);
 								ne.push_back(buf[h]);
 								/*cout << n << "\t" << ne << "\t" << endl;
 								cout << i<<endl;*/
 							}
-							if (n == ne) {//Ç°×ºÏàÍ¬
-								/*if (theclosure[i].father[z] == now)*/ { /*cout << "\t"<<"there" << endl;*/ return i; }//À´Ô´ÓÚÍ¬Ò»¸ö¸¸´ú£¬Ïàµ±ÓÚÒ»Æğ½ÓÊÕ×Ö·û£¬.Ò»ÆğºóÒÆ£¬Ç°×ºÏàÍ¬
-							}//²»ĞèÒªÀ´Ô´ÓÚÍ¬Ò»¸¸´ú
+							if (n == ne) {//å‰ç¼€ç›¸åŒ
+								/*if (theclosure[i].father[z] == now)*/ { /*cout << "\t"<<"there" << endl;*/ return i; }//æ¥æºäºåŒä¸€ä¸ªçˆ¶ä»£ï¼Œç›¸å½“äºä¸€èµ·æ¥æ”¶å­—ç¬¦ï¼Œ.ä¸€èµ·åç§»ï¼Œå‰ç¼€ç›¸åŒ
+							}//ä¸éœ€è¦æ¥æºäºåŒä¸€çˆ¶ä»£
 						}
 					}
 				}
@@ -266,9 +266,9 @@ int searchsameth(int x,int now)//ÓÃµãÒÑ¾­ºóÒÆµÄÏîÄ¿½øĞĞËÑÑ°
 	return -1;
 }
 void createclosure()
-{//´ÓÎÄ·¨¿ªÊ¼·û¿ªÊ¼
-	int now=0;//½øĞĞÖĞµÄclosure,µ±Ç°×´Ì¬
-	int position = 0;//ÏîÄ¿ÔÚmapÖĞµÄÎ»ÖÃ
+{//ä»æ–‡æ³•å¼€å§‹ç¬¦å¼€å§‹
+	int now=0;//è¿›è¡Œä¸­çš„closure,å½“å‰çŠ¶æ€
+	int position = 0;//é¡¹ç›®åœ¨mapä¸­çš„ä½ç½®
 	pair<pair<string, string>, int>str = xiangmu[0];
 	num_closure = 0;
 	theclosure[0].num = 0;
@@ -276,7 +276,7 @@ void createclosure()
 	theclosure[0].count++;
 	theclosure[0].all[theclosure[0].count] = 0;
 	theclosure[0].spot = str.second;
-	//»ñÈ¡.ºóÃæµÄµÚÒ»Î»
+	//è·å–.åé¢çš„ç¬¬ä¸€ä½
 	string s = str.first.second;
 	char buf[100];
 	strcpy(buf, s.c_str());
@@ -285,79 +285,79 @@ void createclosure()
 	//cout << "a" << next << "a" << endl;
 	//cout << next<<endl<<buf[0]<<vn.count(next);
 	if (vn.count(next)==1) {
-		//Èç¹û.µÄÏÂÒ»Î»ÊÇ·ÇÖÕ½á·û,ÔòËÑË÷ÏîÄ¿£¬½«.µÄÎ»ÖÃÎª0µÄ´æÈëclosureÖĞ
+		//å¦‚æœ.çš„ä¸‹ä¸€ä½æ˜¯éç»ˆç»“ç¬¦,åˆ™æœç´¢é¡¹ç›®ï¼Œå°†.çš„ä½ç½®ä¸º0çš„å­˜å…¥closureä¸­
 		dfs(0, next);
 	}
 	//
 	int c = 0;
-	while (theclosure[0].scount != theclosure[0].count)//´ÓÎÄ·¨¿ªÊ¼·û¿ªÊ¼
+	while (theclosure[0].scount != theclosure[0].count)//ä»æ–‡æ³•å¼€å§‹ç¬¦å¼€å§‹
 	{
 		theclosure[0].scount++;
 		pair<pair<string, string>, int>str1 = xiangmu[theclosure[0].all[theclosure[0].scount]];
-		int i = str1.second + 1;//µãºóÒÆ£¬Ïàµ±ÓÚÊäÈëÁËÒ»¸ö×Ö·û
-		for (int x = 0; x < num_xiangmu; x++)//±éÀúÏîÄ¿
+		int i = str1.second + 1;//ç‚¹åç§»ï¼Œç›¸å½“äºè¾“å…¥äº†ä¸€ä¸ªå­—ç¬¦
+		for (int x = 0; x < num_xiangmu; x++)//éå†é¡¹ç›®
 		{
-			if (str1.first == xiangmu[x].first && i == (xiangmu[x].second))//ÕÒµ½ÁËËùĞèÏîÄ¿µÄ±àºÅ
+			if (str1.first == xiangmu[x].first && i == (xiangmu[x].second))//æ‰¾åˆ°äº†æ‰€éœ€é¡¹ç›®çš„ç¼–å·
 			{
 				
-				int z = search(x);//Ñ°ÕÒÏîÄ¿¼¯ÊÇ·ñÓĞÏîÄ¿
-				int exist = searchexist(x);//ÅĞ¶ÏÊÇ·ñ´æÔÚÒ»¸öÏîÄ¿²»ÔÚÏîÄ¿¼¯µÄµÚÒ»ĞĞ
+				int z = search(x);//å¯»æ‰¾é¡¹ç›®é›†æ˜¯å¦æœ‰é¡¹ç›®
+				int exist = searchexist(x);//åˆ¤æ–­æ˜¯å¦å­˜åœ¨ä¸€ä¸ªé¡¹ç›®ä¸åœ¨é¡¹ç›®é›†çš„ç¬¬ä¸€è¡Œ
 				if (exist != -1)z = exist;
-				if (z == -1)//ÕÒ²»µ½
+				if (z == -1)//æ‰¾ä¸åˆ°
 				{
-					int a = searchsameth(x,now);//Ñ°ÕÒÊÇ·ñÓĞÏîÄ¿µÄÇ°×ºÏàÍ¬µÄÏîÄ¿£¬À´Ô´ÓÚÍ¬Ò»¸öclosure¼¯
-					if (a==-1) {//´´½¨ĞÂµÄclosure¼¯
+					int a = searchsameth(x,now);//å¯»æ‰¾æ˜¯å¦æœ‰é¡¹ç›®çš„å‰ç¼€ç›¸åŒçš„é¡¹ç›®ï¼Œæ¥æºäºåŒä¸€ä¸ªclosureé›†
+					if (a==-1) {//åˆ›å»ºæ–°çš„closureé›†
 						num_closure++;//
 						int n = num_closure;
 						theclosure[n].num = n;
-						theclosure[n].count++;//ÏîÄ¿ÊıÔö¼Ó
+						theclosure[n].count++;//é¡¹ç›®æ•°å¢åŠ 
 						theclosure[n].first = xiangmu[x].first.first + xiangmu[x].first.second;
 						theclosure[n].all[theclosure[n].count] = x;
 						theclosure[n].spot = xiangmu[x].second;
 						theclosure[n].fathercount++;
-						theclosure[n].father[theclosure[n].fathercount] = 0;//»ñµÃ¸¸´úÎ»ÖÃ£¬µ«¸¸´ú¿ÉÄÜÓĞ¶à¸ö
+						theclosure[n].father[theclosure[n].fathercount] = 0;//è·å¾—çˆ¶ä»£ä½ç½®ï¼Œä½†çˆ¶ä»£å¯èƒ½æœ‰å¤šä¸ª
 						//theclosure[now].scount++;
-						theclosure[now].next[theclosure[now].scount] = n;//É¨ÃèÒ»¸ö×Ö·ûºóÖ¸ÏòµÄÏÂÒ»¸öclosure¼¯
+						theclosure[now].next[theclosure[now].scount] = n;//æ‰«æä¸€ä¸ªå­—ç¬¦åæŒ‡å‘çš„ä¸‹ä¸€ä¸ªclosureé›†
 						string strin = xiangmu[theclosure[now].all[theclosure[now].scount]].first.second;
 						char cha[100];
 						strcpy(cha, strin.c_str());
 						string nt;
 						nt.push_back(cha[xiangmu[theclosure[now].all[theclosure[now].scount]].second]);
-						theclosure[now].nextpoint[theclosure[now].scount] = nt;//¾­¹ı±ßµ½´ï×Ó´ú
+						theclosure[now].nextpoint[theclosure[now].scount] = nt;//ç»è¿‡è¾¹åˆ°è¾¾å­ä»£
 						string st = xiangmu[x].first.second;
 						char ch[100];
 						strcpy(ch, st.c_str());
 						string ne;
-						ne.push_back(ch[xiangmu[x].second]);//Ñ¹Èë¿ÕµÄ×Ö·û£¬Ö¤Ã÷µ½Ä©Î²ÁË£¬¾ÍÃ»ÓĞdfsÁË
+						ne.push_back(ch[xiangmu[x].second]);//å‹å…¥ç©ºçš„å­—ç¬¦ï¼Œè¯æ˜åˆ°æœ«å°¾äº†ï¼Œå°±æ²¡æœ‰dfsäº†
 						//cout << "a" << ch[xiangmu[x].second] << "a" << endl;
 						theclosure[n].fatherpoint[theclosure[n].fathercount] = ne;
-						if (vn.count(ne) == 1)dfs(n, ne);//Çó¾­¹ı¿Õ×ÖµÄÏîÄ¿
+						if (vn.count(ne) == 1)dfs(n, ne);//æ±‚ç»è¿‡ç©ºå­—çš„é¡¹ç›®
 					}
 					else {
-						theclosure[a].count++;//´æÔÚÒ»¸öÏîÄ¿¼¯£¬Ç°×ºÏàÍ¬
+						theclosure[a].count++;//å­˜åœ¨ä¸€ä¸ªé¡¹ç›®é›†ï¼Œå‰ç¼€ç›¸åŒ
 						theclosure[a].all[theclosure[a].count] = x;
 						theclosure[a].fathercount++;
-						theclosure[a].father[theclosure[a].fathercount] = now;//¸¸½ÚµãÃ»±ØÒª
-						string strin = xiangmu[theclosure[now].all[theclosure[now].scount]].first.second;//²úÉúÊ½×ó²¿
+						theclosure[a].father[theclosure[a].fathercount] = now;//çˆ¶èŠ‚ç‚¹æ²¡å¿…è¦
+						string strin = xiangmu[theclosure[now].all[theclosure[now].scount]].first.second;//äº§ç”Ÿå¼å·¦éƒ¨
 						char cha[100];
 						strcpy(cha, strin.c_str());
 						string nt;
 						nt.push_back(cha[xiangmu[theclosure[now].all[theclosure[now].scount]].second]);
 						theclosure[now].nextpoint[theclosure[now].scount] = nt;
-						theclosure[now].next[theclosure[now].scount] = a;//µ±Ç°ÏîÄ¿¼¯µÃµ½ĞÂµÄÏîÄ¿¼¯µÄÎ»ÖÃ
+						theclosure[now].next[theclosure[now].scount] = a;//å½“å‰é¡¹ç›®é›†å¾—åˆ°æ–°çš„é¡¹ç›®é›†çš„ä½ç½®
 						string st = xiangmu[x].first.second;
 						char ch[100];
 						strcpy(ch, st.c_str());
 						string ne;
-						ne.push_back(ch[xiangmu[x].second]);//ÅĞ¶ÏµãºóµÄ´øÉ¨Ãè×Ö·ûÊÇ²»ÊÇ·ÇÖÕ½á·û
+						ne.push_back(ch[xiangmu[x].second]);//åˆ¤æ–­ç‚¹åçš„å¸¦æ‰«æå­—ç¬¦æ˜¯ä¸æ˜¯éç»ˆç»“ç¬¦
 						theclosure[a].fatherpoint[theclosure[a].fathercount] = ne;
-						if (vn.count(ne) == 1)dfs(a, ne);//ÊÇµÄ»°ÓÃdfs
+						if (vn.count(ne) == 1)dfs(a, ne);//æ˜¯çš„è¯ç”¨dfs
 					}
 				}
-				else {//²»ÄÜ×öµ½fatherÓë±¾ÏîÄ¿Ò»Ò»¶ÔÓ¦
+				else {//ä¸èƒ½åšåˆ°fatherä¸æœ¬é¡¹ç›®ä¸€ä¸€å¯¹åº”
 					//theclosure[z].count++;
 					//theclosure[z].all[theclosure[z].count] = x;
-					theclosure[z].fathercount++;//ÕÒµ½ÏîÄ¿¼¯
+					theclosure[z].fathercount++;//æ‰¾åˆ°é¡¹ç›®é›†
 					theclosure[z].father[theclosure[z].fathercount] = now;
 					string st = xiangmu[x].first.second;
 					char ch[100];
@@ -366,13 +366,13 @@ void createclosure()
 					ne.push_back(ch[xiangmu[x].second]);
 					theclosure[z].fatherpoint[theclosure[z].fathercount] = ne;
 					//theclosure[now].scount++;
-					theclosure[now].next[theclosure[now].scount] = z;//½«µ±Ç°ÏîÄ¿¼¯µÄnextÖ¸ÏòÕÒµ½µÄÏîÄ¿¼¯
+					theclosure[now].next[theclosure[now].scount] = z;//å°†å½“å‰é¡¹ç›®é›†çš„nextæŒ‡å‘æ‰¾åˆ°çš„é¡¹ç›®é›†
 					string strin = xiangmu[theclosure[now].all[theclosure[now].scount]].first.second;
 					char cha[100];
 					strcpy(cha, strin.c_str());
 					string nt;
 					nt.push_back(cha[xiangmu[theclosure[now].all[theclosure[now].scount]].second]);
-					theclosure[now].nextpoint[theclosure[now].scount] = nt;//´¢´æ´øÉ¨Ãè×Ö·û´®µÄµÚÒ»¸ö×Ö·ûÏÂÒ»¸ö×Ö·ûµ½´ïÏÂÒ»¸öÏîÄ¿¼¯
+					theclosure[now].nextpoint[theclosure[now].scount] = nt;//å‚¨å­˜å¸¦æ‰«æå­—ç¬¦ä¸²çš„ç¬¬ä¸€ä¸ªå­—ç¬¦ä¸‹ä¸€ä¸ªå­—ç¬¦åˆ°è¾¾ä¸‹ä¸€ä¸ªé¡¹ç›®é›†
 					/*string st = xiangmu[x].first.second;
 					char ch[100];
 					strcpy(ch, st.c_str());
@@ -386,7 +386,7 @@ void createclosure()
 	int flag = 1;
 	while (now != num_closure||flag==1)
 	{
-		flag = searchson();//Ñ°ÕÒ»¹Ã»ÓĞ¶ÔÓ¦¹ØÏµµÄÏîÄ¿¼¯ÖĞµÄÏîÄ¿
+		flag = searchson();//å¯»æ‰¾è¿˜æ²¡æœ‰å¯¹åº”å…³ç³»çš„é¡¹ç›®é›†ä¸­çš„é¡¹ç›®
 		/*string st = xiangmu[theclosure[now].all[0]].first.second;
 		char ch[100];
 		strcpy(ch, st.c_str());
@@ -394,29 +394,29 @@ void createclosure()
 		ne.push_back(ch[theclosure[now].spot]);
 		if (vn.count(ne) == 1)dfs(now, ne);*/
 		//now++;
-		for (int m = 0; m <= num_closure; m++)//±éÀúÃ¿¸öclosure¼¯
+		for (int m = 0; m <= num_closure; m++)//éå†æ¯ä¸ªclosureé›†
 		{
-			now = m;//µ±Ç°ÏîÄ¿
+			now = m;//å½“å‰é¡¹ç›®
 			while (theclosure[now].scount != theclosure[now].count)//
 			{
-				theclosure[now].scount++;//²»¹ÜÓĞÃ»ÓĞ¶ÔÓ¦µÄ£¬¶¼ÊÇÒªÔö¼Ó£¬ËùÒÔ²»ÓÃµ£ĞÄÓÉÓÚ¹éÔ¼ÏîÄ¿µ¼ÖÂµÄËÀÑ­»·
-				pair<pair<string, string>, int>str1 = xiangmu[theclosure[now].all[theclosure[now].scount]];//Ã»ÓĞ×Ó´úµÄÏîÄ¿
-				int i = str1.second+1;//µãºóÒÆÒ»Î» +1ĞĞ£¬²»+1²»ĞĞ£¬Èç¹ûÊÇ¹æÔ¼ÏîÄ¿£¬ºóÒÆÖ®ºóÑ°ÕÒºó¶ÔÓ¦µÄÊÇÒ»¸ö²»´æÔÚµÄ¼¯ºÏ
-				for (int x = 0; x < num_xiangmu; x++)//±éÀúÏîÄ¿¼¯£¬ÕÒÏàÍ¬µÄÏîÄ¿¼¯
+				theclosure[now].scount++;//ä¸ç®¡æœ‰æ²¡æœ‰å¯¹åº”çš„ï¼Œéƒ½æ˜¯è¦å¢åŠ ï¼Œæ‰€ä»¥ä¸ç”¨æ‹…å¿ƒç”±äºå½’çº¦é¡¹ç›®å¯¼è‡´çš„æ­»å¾ªç¯
+				pair<pair<string, string>, int>str1 = xiangmu[theclosure[now].all[theclosure[now].scount]];//æ²¡æœ‰å­ä»£çš„é¡¹ç›®
+				int i = str1.second+1;//ç‚¹åç§»ä¸€ä½ +1è¡Œï¼Œä¸+1ä¸è¡Œï¼Œå¦‚æœæ˜¯è§„çº¦é¡¹ç›®ï¼Œåç§»ä¹‹åå¯»æ‰¾åå¯¹åº”çš„æ˜¯ä¸€ä¸ªä¸å­˜åœ¨çš„é›†åˆ
+				for (int x = 0; x < num_xiangmu; x++)//éå†é¡¹ç›®é›†ï¼Œæ‰¾ç›¸åŒçš„é¡¹ç›®é›†
 				{
-					if (str1.first == xiangmu[x].first && i == (xiangmu[x].second))//²»´æÔÚµÄ»°Ìø¹ı£¬ËäÈ»Ã»ÓĞ£¬µ«ÊÇ×Ó´úscount»¹ÊÇÔö¼ÓµÄ
+					if (str1.first == xiangmu[x].first && i == (xiangmu[x].second))//ä¸å­˜åœ¨çš„è¯è·³è¿‡ï¼Œè™½ç„¶æ²¡æœ‰ï¼Œä½†æ˜¯å­ä»£scountè¿˜æ˜¯å¢åŠ çš„
 					{
-						int z = search(x);//ÕÒÏîÄ¿¼¯
-						int exist = searchexist(x);//ÅĞ¶ÏÊÇ·ñ´æÔÚÒ»¸öÏîÄ¿²»ÔÚÏîÄ¿¼¯µÄµÚÒ»ĞĞ
+						int z = search(x);//æ‰¾é¡¹ç›®é›†
+						int exist = searchexist(x);//åˆ¤æ–­æ˜¯å¦å­˜åœ¨ä¸€ä¸ªé¡¹ç›®ä¸åœ¨é¡¹ç›®é›†çš„ç¬¬ä¸€è¡Œ
 						if (exist != -1)z = exist;
-						if (z == -1)//ÕÒ²»µ½
+						if (z == -1)//æ‰¾ä¸åˆ°
 						{
-							int a = searchsameth(x,now);//ÕÒµ½Ç°×ºÏàÍ¬µÄÏîÄ¿µÄÏîÄ¿¼¯
-							if (a == -1)//ÕÒ²»µ½
+							int a = searchsameth(x,now);//æ‰¾åˆ°å‰ç¼€ç›¸åŒçš„é¡¹ç›®çš„é¡¹ç›®é›†
+							if (a == -1)//æ‰¾ä¸åˆ°
 							{
-								num_closure++;//ÏîÄ¿¼¯ÊıÁ¿Ôö¼Ó
+								num_closure++;//é¡¹ç›®é›†æ•°é‡å¢åŠ 
 								int n = num_closure;
-								theclosure[n].num = n;//¸³Öµ
+								theclosure[n].num = n;//èµ‹å€¼
 								theclosure[n].count++;
 								theclosure[n].first = xiangmu[x].first.first + xiangmu[x].first.second;
 								theclosure[n].all[theclosure[n].count] = x;
@@ -437,7 +437,7 @@ void createclosure()
 								string nex;
 								nex.push_back(ch[xiangmu[x].second]);
 								theclosure[n].fatherpoint[theclosure[n].fathercount] = nex;
-								if (vn.count(nex) == 1)dfs(n, nex);//Èç¹û
+								if (vn.count(nex) == 1)dfs(n, nex);//å¦‚æœ
 							}
 							else {
 								//int a = searchsameth(x);
@@ -492,17 +492,17 @@ void createclosure()
 			}
 		}
 	}
-	for (int i = 0; i <=num_closure; i++)//Êä³öÏîÄ¿¼¯
+	for (int i = 0; i <=num_closure; i++)//è¾“å‡ºé¡¹ç›®é›†
 	{
 		cout << "I" << i << endl;
 		for (int x = 0; x <= theclosure[i].count; x++)
 		{
-			cout<<xiangmu[theclosure[i].all[x]].first.first << "->" << xiangmu[theclosure[i].all[x]].first.second <<"\t.ÔÚ"<< xiangmu[theclosure[i].all[x]].second <<"\t"<<theclosure[i].next[x]<<"\t"<< theclosure[i].nextpoint[x] <<"\t"<< endl;
+			cout<<xiangmu[theclosure[i].all[x]].first.first << "->" << xiangmu[theclosure[i].all[x]].first.second <<"\t.åœ¨"<< xiangmu[theclosure[i].all[x]].second <<"\t"<<theclosure[i].next[x]<<"\t"<< theclosure[i].nextpoint[x] <<"\t"<< endl;
 		}
 		cout << endl;
 	}
 }
-int GO(int x,string n)//ÏîÄ¿¼¯±àºÅ£¬·ûºÅ
+int GO(int x,string n)//é¡¹ç›®é›†ç¼–å·ï¼Œç¬¦å·
 {
 	for (int i = 0; i < theclosure[x].scount; i++)
 	{
@@ -524,7 +524,7 @@ int Go(int x, string n)
 		string st = str.first.second;
 		strcpy(ch, st.c_str());
 		string next;
-		next.push_back(ch[str.second]);//ÌáÈ¡¾­¹ıµÄ×Ö·û
+		next.push_back(ch[str.second]);//æå–ç»è¿‡çš„å­—ç¬¦
 		if (next == n) {
 			str.second++;
 			for (int z = 0; z < num_xiangmu; z++)
@@ -539,10 +539,10 @@ int Go(int x, string n)
 	}
 	return -1;
 }
-int gogo(int x, string n)//ÏîÄ¿¼¯±àºÅ£¬ÊäÈë×Ö·û
-{//¿ÉÒÔÖ±½ÓÍ¨¹ınextpoint ÒÔ¼°nextÀ´È·¶¨ÏÂÒ»¸öÏîÄ¿¼¯£¬µ«ÎªÁË°²È«£¬ÏÈ½øĞĞÑéÖ¤
+int gogo(int x, string n)//é¡¹ç›®é›†ç¼–å·ï¼Œè¾“å…¥å­—ç¬¦
+{//å¯ä»¥ç›´æ¥é€šè¿‡nextpoint ä»¥åŠnextæ¥ç¡®å®šä¸‹ä¸€ä¸ªé¡¹ç›®é›†ï¼Œä½†ä¸ºäº†å®‰å…¨ï¼Œå…ˆè¿›è¡ŒéªŒè¯
 	string stri = "";
-	for (int i = 0; i <= theclosure[x].count; i++)//±éÀúÏîÄ¿¼¯ÖĞµÄÏîÄ¿
+	for (int i = 0; i <= theclosure[x].count; i++)//éå†é¡¹ç›®é›†ä¸­çš„é¡¹ç›®
 	{
 		int y = theclosure[x].all[i];
 		pair < pair<string, string>, int >str = xiangmu[y];
@@ -550,18 +550,18 @@ int gogo(int x, string n)//ÏîÄ¿¼¯±àºÅ£¬ÊäÈë×Ö·û
 		string st = str.first.second;
 		strcpy(ch, st.c_str());
 		string next;
-		next.push_back(ch[str.second]);//ÌáÈ¡´ıÉ¨Ãè·ûºÅ´®µÄµÚÒ»¸ö·ûºÅ
-		if (next == n) {//ÕÒµ½¶ÔÓ¦µÄÊäÈë£¬¶ÔÓ¦µÄÏîÄ¿
-			str.second++;//µãºóÒÆ£¬»ñÈ¡ÏîÄ¿
-			for (int z = 0; z < num_xiangmu; z++)//±éÀúÏîÄ¿
+		next.push_back(ch[str.second]);//æå–å¾…æ‰«æç¬¦å·ä¸²çš„ç¬¬ä¸€ä¸ªç¬¦å·
+		if (next == n) {//æ‰¾åˆ°å¯¹åº”çš„è¾“å…¥ï¼Œå¯¹åº”çš„é¡¹ç›®
+			str.second++;//ç‚¹åç§»ï¼Œè·å–é¡¹ç›®
+			for (int z = 0; z < num_xiangmu; z++)//éå†é¡¹ç›®
 			{
-				if (str == xiangmu[z])//ÕÒµ½¶ÔÓ¦µÄÏîÄ¿£¬Èç¹ûÊÇ¹éÔ¼ÏîÄ¿µÄ»°£¬µãºóÒÆ£¬¾Í»áÕÒ²»µ½ÏîÄ¿ÁË
-				{//ÕÒz
-					if (theclosure[x].next[i] != NULL) {//ÏîÄ¿»ñÈ¡Ò»¸ö×Ö·ûµ½ÏÂÒ»¸öÏîÄ¿¼¯
+				if (str == xiangmu[z])//æ‰¾åˆ°å¯¹åº”çš„é¡¹ç›®ï¼Œå¦‚æœæ˜¯å½’çº¦é¡¹ç›®çš„è¯ï¼Œç‚¹åç§»ï¼Œå°±ä¼šæ‰¾ä¸åˆ°é¡¹ç›®äº†
+				{//æ‰¾z
+					if (theclosure[x].next[i] != NULL) {//é¡¹ç›®è·å–ä¸€ä¸ªå­—ç¬¦åˆ°ä¸‹ä¸€ä¸ªé¡¹ç›®é›†
 						int a = theclosure[x].next[i];
-						for (int b = 0; b <= theclosure[a].count; b++)//±éÀúnextÏîÄ¿¼¯µÄÏîÄ¿
+						for (int b = 0; b <= theclosure[a].count; b++)//éå†nexté¡¹ç›®é›†çš„é¡¹ç›®
 						{
-							if (theclosure[a].all[b] == z)return a;//´æÔÚµãºóÒÆºóµÄÏîÄ¿£¬Ö¤Ã÷¸ÃÏîÄ¿¼¯¾ÍÊÇĞèÒªµÄ¼¯ºÏµÄ±àºÅ
+							if (theclosure[a].all[b] == z)return a;//å­˜åœ¨ç‚¹åç§»åçš„é¡¹ç›®ï¼Œè¯æ˜è¯¥é¡¹ç›®é›†å°±æ˜¯éœ€è¦çš„é›†åˆçš„ç¼–å·
 						}
 					}
 					//return search(z);
@@ -582,49 +582,49 @@ int GoGo(int x, string n)
 void createActionGoto()
 {
 	/*for (int i = 0; i < num_xiangmu; i++)*/
-	for (int z = 0; z <= num_closure; z++)//Ã¿¸ö¼¯ºÏÖĞµÄÃ¿¸öÏîÄ¿½øĞĞÒ»´Î¹¹±í£¬ÏàÍ¬µÄ»á¸²¸Ç
+	for (int z = 0; z <= num_closure; z++)//æ¯ä¸ªé›†åˆä¸­çš„æ¯ä¸ªé¡¹ç›®è¿›è¡Œä¸€æ¬¡æ„è¡¨ï¼Œç›¸åŒçš„ä¼šè¦†ç›–
 	{
 		for (int f = 0; f <= theclosure[z].count;f++)
 		{
 			int i = theclosure[z].all[f];
-			if (xiangmu[i].first.second.length() == xiangmu[i].second)//¹éÔ¼ÏîÄ¿
+			if (xiangmu[i].first.second.length() == xiangmu[i].second)//å½’çº¦é¡¹ç›®
 			{
 				//cout << "a" << endl;
-				if (i == 1) {//acc£¬½ÓÊÜÏîÄ¿Ò»°ãÔÚ¹Ì¶¨Î»ÖÃ
+				if (i == 1) {//accï¼Œæ¥å—é¡¹ç›®ä¸€èˆ¬åœ¨å›ºå®šä½ç½®
 					int x = search(i);
 					Action[x][vt["#"]] = "acc";
 				}
 				else {//r
 					int x = search(i);
 					/*cout << x << endl;
-					cout << xiangmu[i].first.first << "->" << xiangmu[i].first.second << "µãÔÚ" << xiangmu[i].second << endl;*/
+					cout << xiangmu[i].first.first << "->" << xiangmu[i].first.second << "ç‚¹åœ¨" << xiangmu[i].second << endl;*/
 					pair<string, string>str = xiangmu[i].first;
-					int n = wherechanshengshi[str];//²úÉúÊ½Î»ÖÃ
+					int n = wherechanshengshi[str];//äº§ç”Ÿå¼ä½ç½®
 					for (int h = 0; h < num_vt; h++)
 					{
-						Action[x][h] = "r" + to_string(n);//r+´æ·Å²úÉúÊ½Î»ÖÃ
+						Action[x][h] = "r" + to_string(n);//r+å­˜æ”¾äº§ç”Ÿå¼ä½ç½®
 					}
 				}
 			}
 			else {
 				//int x = search(i);
 				//cout << z << endl;
-				//cout << xiangmu[i].first.first << "->" << xiangmu[i].first.second << "µãÔÚ" << xiangmu[i].second << endl;
+				//cout << xiangmu[i].first.first << "->" << xiangmu[i].first.second << "ç‚¹åœ¨" << xiangmu[i].second << endl;
 				char ch[100];
 				string str = xiangmu[i].first.second;
 				strcpy(ch, str.c_str());
 				string next;
-				next.push_back(ch[xiangmu[i].second]);//»ñÈ¡µãºóµÄ×Ö·û£¬´ú±í»ñÈ¡µÄÊäÈë
+				next.push_back(ch[xiangmu[i].second]);//è·å–ç‚¹åçš„å­—ç¬¦ï¼Œä»£è¡¨è·å–çš„è¾“å…¥
 				//cout << "\"" << next << "\"" << endl;
-				if (vn.count(next) == 1)//·ÇÖÕ½á·û£¬´ıÔ¼ÏîÄ¿
+				if (vn.count(next) == 1)//éç»ˆç»“ç¬¦ï¼Œå¾…çº¦é¡¹ç›®
 				{
-					int y = GoGo(z, next);//´æÔÚÏîÄ¿¼¯
+					int y = GoGo(z, next);//å­˜åœ¨é¡¹ç›®é›†
 					//cout << "->" << y << "<-" << endl;
 					if (y != -1)Goto[z][vn[next]] = to_string(y);
 				}
-				if (vt.count(next) == 1)//ÖÕ½á·û£¬ÒÆ½øÏîÄ¿
+				if (vt.count(next) == 1)//ç»ˆç»“ç¬¦ï¼Œç§»è¿›é¡¹ç›®
 				{
-					int y = GoGo(z, next);//´æÔÚÏîÄ¿¼¯
+					int y = GoGo(z, next);//å­˜åœ¨é¡¹ç›®é›†
 					//cout << "<->" << y << "<->" << endl;
 					if (y != -1)Action[z][vt[next]] = "s" + to_string(y);
 				}
@@ -656,39 +656,6 @@ void showtable()
 		}
 		cout << endl;
 	}
-	//for (int i = 0; i < num_vt; i++)
-	//{
-	//	cout << "\t" << wherevt[i];
-	//}
-	//cout << endl;
-	//for (int i = 0; i <= num_closure; i++)
-	//{
-	//	cout << i << "\t";
-	//	for (int x = 0; x < num_vt; x++)
-	//	{
-	//		cout << Action[i][x] << "\t";
-	//	}
-	//	cout << endl;
-	//}
-	//for (int i = 0; i < num_vn; i++)
-	//{
-	//	cout << wherevn[i] << "\t";
-	//}
-	//cout << endl;
-	//for (int i = 0; i < num_closure; i++)
-	//{
-	//	for (int x = 0; x < num_vn; x++)
-	//	{
-	//		if (!(Goto[i][x].empty()))
-	//			cout << i << ',' << Goto[i][x] << "\t";
-	//		else {
-
-	//			cout << "\t";
-	//		}
-	//	}
-
-	//	cout << endl;
-	//}
 }
 string code;
 char chcode[10];
@@ -696,14 +663,14 @@ string strcode[wherenum];
 int b;
 void init()
 {
-	cout << "ÊäÈë´®£¬°üÀ¨#" ;
+	cout << "è¾“å…¥ä¸²ï¼ŒåŒ…æ‹¬#" ;
 	//cin >> code;
 	code = "i+i*i";
-	cout << "ÇëÊäÈëÒª·ÖÎöµÄÊäÈë´®µÄ×Ö·û¸öÊı(²»°üÀ¨#)£º"<<endl;
+	cout << "è¯·è¾“å…¥è¦åˆ†æçš„è¾“å…¥ä¸²çš„å­—ç¬¦ä¸ªæ•°(ä¸åŒ…æ‹¬#)ï¼š"<<endl;
 	cin >> b;
 	b = b + 1;
 	string input;
-	cout << "ÇëÊäÈëÒª·ÖÎöµÄÊäÈë´®(#Îª½áÎ²£©:";
+	cout << "è¯·è¾“å…¥è¦åˆ†æçš„è¾“å…¥ä¸²(#ä¸ºç»“å°¾ï¼‰:";
 	for(int h=0;h<b;h++)
 	{
 		cin>>strcode[h];
@@ -740,46 +707,46 @@ void analyse()
 {
 	ch.push("#");
 	status.push(0);
-	int n = 0;//ÊäÈë´®Ö¸ÏòÎ»ÖÃ
+	int n = 0;//è¾“å…¥ä¸²æŒ‡å‘ä½ç½®
 	cout << endl;
 	while (1)
 	{
 		showstackch();
 		showstackstatus();
 		int x = status.top();
-		string z = Action[x][vt[strcode[n]]];//¶Áaction±í
-		string temp = z.substr(0, 1);//»ñÈ¡×Ö·û´®ÖĞµÄµÚÒ»¸ö×Ö·û£¬ÅĞ¶ÏÊÇr£¬s
+		string z = Action[x][vt[strcode[n]]];//è¯»actionè¡¨
+		string temp = z.substr(0, 1);//è·å–å­—ç¬¦ä¸²ä¸­çš„ç¬¬ä¸€ä¸ªå­—ç¬¦ï¼Œåˆ¤æ–­æ˜¯rï¼Œs
 		string num;
-		for (int j = n; j < b; j++)//Êä³öÊäÈë´®
+		for (int j = n; j < b; j++)//è¾“å‡ºè¾“å…¥ä¸²
 		{
 			cout << strcode[j];
 		}
 		cout << "\t";
-		if(z.length()>1)num = z.substr(1);//»ñÈ¡Êı×Ö
-		if (temp == "s")//ÒÆ½ø
+		if(z.length()>1)num = z.substr(1);//è·å–æ•°å­—
+		if (temp == "s")//ç§»è¿›
 		{
-			cout << num << "ÈëÕ»" << endl;
-			status.push(atoi(num.c_str()));//×´Ì¬ÈëÕ»
-			ch.push(strcode[n]);//ÊäÈë×Ö·ûÈëÕ»
-			n++;//ÏÂÒ»¸ö×Ö·û
+			cout << num << "å…¥æ ˆ" << endl;
+			status.push(atoi(num.c_str()));//çŠ¶æ€å…¥æ ˆ
+			ch.push(strcode[n]);//è¾“å…¥å­—ç¬¦å…¥æ ˆ
+			n++;//ä¸‹ä¸€ä¸ªå­—ç¬¦
 		}
-		else if (temp == "r")//¹éÔ¼
+		else if (temp == "r")//å½’çº¦
 		{
-			int n = atoi(num.c_str());//×ª»»ÎªÊı×Ö
-			cout << "ÓÃ" << chanshengshi[n].first << "->" << chanshengshi[n].second << "¹éÔ¼"<<endl;
+			int n = atoi(num.c_str());//è½¬æ¢ä¸ºæ•°å­—
+			cout << "ç”¨" << chanshengshi[n].first << "->" << chanshengshi[n].second << "å½’çº¦"<<endl;
 			for (int i = 0; i < chanshengshi[n].second.length(); i++)
 			{
-				status.pop();//³öÕ»
-				ch.pop();//³öÕ»
+				status.pop();//å‡ºæ ˆ
+				ch.pop();//å‡ºæ ˆ
 			}
-			ch.push(chanshengshi[n].first);//·ûºÅÈëÕ»
-			string g = Goto[status.top()][vn[ch.top()]];//»ñÈ¡goto±íµÄ×´Ì¬
+			ch.push(chanshengshi[n].first);//ç¬¦å·å…¥æ ˆ
+			string g = Goto[status.top()][vn[ch.top()]];//è·å–gotoè¡¨çš„çŠ¶æ€
 			int j = atoi(g.c_str());
-			status.push(j);//×´Ì¬ÈëÕ»
+			status.push(j);//çŠ¶æ€å…¥æ ˆ
 		}
 		else if (z == "acc")
 		{
-			cout << "·ÖÎö³É¹¦" << endl;
+			cout << "åˆ†ææˆåŠŸ" << endl;
 			break;
 		}
 		else {
@@ -833,7 +800,7 @@ void analyse()
 		}
 		if (temp == "acc")
 		{
-			cout << "³É¹¦" << endl;
+			cout << "æˆåŠŸ" << endl;
 			break;
 		}
 		else {
